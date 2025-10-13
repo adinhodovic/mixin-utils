@@ -55,6 +55,7 @@ local tbQueryOptions = table.queryOptions;
     query,
     instant=false,
     description=null,
+    graphMode='area',
     showPercentChange=false,
     percentChangeColorMode='standard',
     steps=[
@@ -74,6 +75,7 @@ local tbQueryOptions = table.queryOptions;
       prometheus.withInstant(instant),
     ]) +
     variable.query.withDatasource('prometheus', '$datasource') +
+    stOptions.withGraphMode(graphMode) +
     stOptions.withShowPercentChange(showPercentChange) +
     stOptions.withPercentChangeColorMode(percentChangeColorMode) +
     stStandardOptions.withUnit(unit) +
