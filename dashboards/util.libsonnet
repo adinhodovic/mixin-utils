@@ -78,7 +78,7 @@ local tbQueryOptions = table.queryOptions;
     ),
 
 
-  pieChartPanel(title, unit, query, legend='', description='', values=['percent'])::
+  pieChartPanel(title, unit, query, legend='', description='', labels=['percent'], values=['percent'])::
     pieChart.new(
       title,
     ) +
@@ -114,7 +114,7 @@ local tbQueryOptions = table.queryOptions;
     pcStandardOptions.withUnit(unit) +
     pcOptions.tooltip.withMode('multi') +
     pcOptions.tooltip.withSort('desc') +
-    pcOptions.withDisplayLabels(values) +
+    pcOptions.withDisplayLabels(labels) +
     pcLegend.withShowLegend(true) +
     pcLegend.withDisplayMode('table') +
     pcLegend.withPlacement('right') +
