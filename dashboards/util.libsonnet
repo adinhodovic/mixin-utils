@@ -14,6 +14,7 @@ local table = g.panel.table;
 local pieChart = g.panel.pieChart;
 
 // Stat
+local stOptions = stat.options;
 local stStandardOptions = stat.standardOptions;
 local stQueryOptions = stat.queryOptions;
 local stPanelOptions = stat.panelOptions;
@@ -54,6 +55,8 @@ local tbQueryOptions = table.queryOptions;
     query,
     instant=false,
     description=null,
+    showPercentChange=false,
+    percentChangeColorMode='standard',
     steps=[
       stStandardOptions.threshold.step.withValue(0) +
       stStandardOptions.threshold.step.withColor('green'),
@@ -71,6 +74,8 @@ local tbQueryOptions = table.queryOptions;
       prometheus.withInstant(instant),
     ]) +
     variable.query.withDatasource('prometheus', '$datasource') +
+    stOptions.withShowPercentChange(showPercentChange) +
+    stOptions.withPercentChangeColorMode(percentChangeColorMode) +
     stStandardOptions.withUnit(unit) +
     stStandardOptions.thresholds.withSteps(steps) +
     stStandardOptions.withMappings(
