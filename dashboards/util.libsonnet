@@ -52,6 +52,7 @@ local tbQueryOptions = table.queryOptions;
     title,
     unit,
     query,
+    instant=false,
     description=null,
     steps=[
       stStandardOptions.threshold.step.withValue(0) +
@@ -66,7 +67,8 @@ local tbQueryOptions = table.queryOptions;
       else {}
     ) +
     stQueryOptions.withTargets([
-      prometheus.new('${datasource}', query),
+      prometheus.new('${datasource}', query) +
+      prometheus.withInstant(instant),
     ]) +
     variable.query.withDatasource('prometheus', '$datasource') +
     stStandardOptions.withUnit(unit) +
