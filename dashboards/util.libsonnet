@@ -141,6 +141,11 @@ local tbQueryOptions = table.queryOptions;
           prometheus.withExemplar(
             // allows us to override exemplar per query if needed
             std.get(q, 'exemplar', default=exemplar)
+          ) +
+          (
+            if std.get(q, 'interval', default=false) then
+              prometheus.withInterval(q.interval)
+            else {}
           )
           for q in query
         ] else
