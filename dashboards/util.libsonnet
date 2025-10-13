@@ -143,7 +143,7 @@ local tbQueryOptions = table.queryOptions;
             std.get(q, 'exemplar', default=exemplar)
           ) +
           (
-            if std.get(q, 'interval', default=false) then
+            if std.get(q, 'interval', default='') != '' then
               prometheus.withInterval(q.interval)
             else {}
           )
