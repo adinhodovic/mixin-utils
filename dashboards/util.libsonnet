@@ -174,7 +174,7 @@ local tbQueryOptions = table.queryOptions;
       else {}
     ),
 
-  tablePanel(title, unit, query, description=null, sortBy=null, transformations=[], overrides=[])::
+  tablePanel(title, unit, query, description=null, sortBy=null, transformations=[], overrides=[], steps=[])::
     table.new(title) +
     (
       if description != null then
@@ -210,7 +210,8 @@ local tbQueryOptions = table.queryOptions;
         ) else {}
     ) +
     tbQueryOptions.withTransformations(transformations) +
-    tbStandardOptions.withOverrides(overrides),
+    tbStandardOptions.withOverrides(overrides) +
+    tbStandardOptions.thresholds.withSteps(steps),
 
   annotations(config, filters)::
     local customAnnotation =
