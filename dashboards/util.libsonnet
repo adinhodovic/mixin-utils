@@ -57,6 +57,7 @@ local tbQueryOptions = table.queryOptions;
     description=null,
     graphMode='area',
     showPercentChange=false,
+    decimals=null,
     percentChangeColorMode='standard',
     steps=[
       stStandardOptions.threshold.step.withValue(0) +
@@ -78,6 +79,11 @@ local tbQueryOptions = table.queryOptions;
     stOptions.withGraphMode(graphMode) +
     stOptions.withShowPercentChange(showPercentChange) +
     stOptions.withPercentChangeColorMode(percentChangeColorMode) +
+    (
+      if decimals != null then
+        stStandardOptions.withDecimals(decimals)
+      else {}
+    ) +
     stStandardOptions.withUnit(unit) +
     stStandardOptions.thresholds.withSteps(steps) +
     stStandardOptions.withMappings(
