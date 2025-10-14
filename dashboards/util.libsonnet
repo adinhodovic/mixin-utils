@@ -73,7 +73,11 @@ local tbQueryOptions = table.queryOptions;
     ) +
     stQueryOptions.withTargets([
       prometheus.new('${datasource}', query) +
-      prometheus.withInstant(instant),
+      (
+        if instant then
+          prometheus.withInstant(instant)
+        else {}
+      ),
     ]) +
     variable.query.withDatasource('prometheus', '$datasource') +
     stOptions.withGraphMode(graphMode) +
