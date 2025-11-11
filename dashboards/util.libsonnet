@@ -292,11 +292,11 @@ local hmQueryOptions = heatmap.queryOptions;
       if config.annotation.enabled then customAnnotation,
     ]),
 
-  dashboardLinks(title, config):: [
+  dashboardLinks(title, config, dropdown=false, includeVars=false):: [
     dashboard.link.dashboards.new(title, config.tags) +
     dashboard.link.link.options.withTargetBlank(true) +
-    dashboard.link.link.options.withAsDropdown(false) +
-    dashboard.link.link.options.withIncludeVars(false) +
+    dashboard.link.link.options.withAsDropdown(dropdown) +
+    dashboard.link.link.options.withIncludeVars(includeVars) +
     dashboard.link.link.options.withKeepTime(true),
   ],
 }
