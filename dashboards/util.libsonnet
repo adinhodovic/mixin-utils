@@ -269,7 +269,7 @@ local hmQueryOptions = heatmap.queryOptions;
           query,
         )
     ) +
-    hmStandardOptions.withUnit(unit),
+    hmOptions.yAxis.withUnit(unit),
 
   annotations(config, filters)::
     local customAnnotation =
