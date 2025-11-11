@@ -12,6 +12,7 @@ local stat = g.panel.stat;
 local timeSeries = g.panel.timeSeries;
 local table = g.panel.table;
 local pieChart = g.panel.pieChart;
+local heatmap = g.panel.heatmap;
 
 // Stat
 local stOptions = stat.options;
@@ -39,6 +40,12 @@ local tsLegend = tsOptions.legend;
 local tbOptions = table.options;
 local tbStandardOptions = table.standardOptions;
 local tbQueryOptions = table.queryOptions;
+
+// Heatmap
+local hmOptions = heatmap.options;
+local hmStandardOptions = heatmap.standardOptions;
+local hmPanelOptions = heatmap.panelOptions;
+local hmQueryOptions = heatmap.queryOptions;
 
 {
   // Bypasses grafana.com/dashboards validator
@@ -236,6 +243,33 @@ local tbQueryOptions = table.queryOptions;
     tbQueryOptions.withTransformations(transformations) +
     tbStandardOptions.withOverrides(overrides) +
     tbStandardOptions.thresholds.withSteps(steps),
+
+  heatmapPanel(title, unit, query, description=null)::
+    heatmap.new(title) +
+    (
+      if description != null then
+        hmPanelOptions.withDescription(description)
+      else {}
+    ) +
+    variable.query.withDatasource('prometheus', '$datasource') +
+    hmQueryOptions.withTargets(
+      if std.isArray(query) then
+        [
+          prometheus.new(
+            '$datasource',
+            q.expr,
+          ) +
+          prometheus.withLegendFormat(
+            q.legend
+          )
+          for q in query
+        ] else
+        prometheus.new(
+          '$datasource',
+          query,
+        )
+    ) +
+    hmStandardOptions.withUnit(unit),
 
   annotations(config, filters)::
     local customAnnotation =
