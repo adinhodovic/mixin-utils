@@ -147,7 +147,7 @@ local textPanelOptions = text.panelOptions;
     pcLegend.withValues(values) +
     pcStandardOptions.withOverrides(overrides),
 
-  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false)::
+  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false, decimals=null)::
     timeSeries.new(title) +
     (
       if description != null then
@@ -188,6 +188,11 @@ local textPanelOptions = text.panelOptions;
     tsStandardOptions.withUnit(unit) +
     tsOptions.tooltip.withMode('multi') +
     tsOptions.tooltip.withSort('desc') +
+    (
+      if decimals != null then
+        tsStandardOptions.withDecimals(decimals)
+      else {}
+    ) +
     tsLegend.withShowLegend() +
     tsLegend.withDisplayMode('table') +
     tsLegend.withPlacement('right') +
