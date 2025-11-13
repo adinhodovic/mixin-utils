@@ -4,8 +4,6 @@ local dashboard = g.dashboard;
 local annotation = g.dashboard.annotation;
 
 local variable = dashboard.variable;
-local datasource = variable.datasource;
-local query = variable.query;
 local prometheus = g.query.prometheus;
 
 local stat = g.panel.stat;
@@ -13,6 +11,7 @@ local timeSeries = g.panel.timeSeries;
 local table = g.panel.table;
 local pieChart = g.panel.pieChart;
 local heatmap = g.panel.heatmap;
+local text = g.panel.text;
 
 // Stat
 local stOptions = stat.options;
@@ -43,9 +42,11 @@ local tbQueryOptions = table.queryOptions;
 
 // Heatmap
 local hmOptions = heatmap.options;
-local hmStandardOptions = heatmap.standardOptions;
 local hmPanelOptions = heatmap.panelOptions;
 local hmQueryOptions = heatmap.queryOptions;
+
+// Textpanel
+local textOptions = text.options;
 
 {
   // Bypasses grafana.com/dashboards validator
@@ -102,7 +103,7 @@ local hmQueryOptions = heatmap.queryOptions;
     ),
 
 
-  pieChartPanel(title, unit, query, legend='', description='', labels=['percent'], values=['percent'])::
+  pieChartPanel(title, unit, query, legend='', description='', labels=['percent'], values=['percent'], overrides=[])::
     pieChart.new(
       title,
     ) +
@@ -142,7 +143,8 @@ local hmQueryOptions = heatmap.queryOptions;
     pcLegend.withShowLegend(true) +
     pcLegend.withDisplayMode('table') +
     pcLegend.withPlacement('right') +
-    pcLegend.withValues(values),
+    pcLegend.withValues(values) +
+    pcStandardOptions.withOverrides(overrides),
 
   timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false)::
     timeSeries.new(title) +
@@ -271,6 +273,16 @@ local hmQueryOptions = heatmap.queryOptions;
     ) +
     hmOptions.withCalculate(true) +
     hmOptions.yAxis.withUnit(unit),
+
+  textPanel(title, content, description=null, mode='markdown')::
+    text.new(title) +
+    (
+      if description != null then
+        textOptions.withDescription(description)
+      else {}
+    ) +
+    textOptions.withMode(mode) +
+    textOptions.withContent(content),
 
   annotations(config, filters)::
     local customAnnotation =
