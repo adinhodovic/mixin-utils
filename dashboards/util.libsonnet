@@ -47,6 +47,7 @@ local hmQueryOptions = heatmap.queryOptions;
 
 // Textpanel
 local textOptions = text.options;
+local textPanelOptions = text.panelOptions;
 
 {
   // Bypasses grafana.com/dashboards validator
@@ -278,7 +279,7 @@ local textOptions = text.options;
     text.new(title) +
     (
       if description != null then
-        textOptions.withDescription(description)
+        textPanelOptions.withDescription(description)
       else {}
     ) +
     textOptions.withMode(mode) +
