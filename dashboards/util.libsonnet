@@ -56,7 +56,7 @@ local textPanelOptions = text.panelOptions;
     __requires: [],
   },
 
-  dashboardDescriptionLink(name, link): 'The dashboards were generated using %s. %s. Open issues and create feature requests in the repository.' % [name, link],
+  dashboardDescriptionLink(name, link): 'The dashboards were generated using [%s](%s). Open issues and create feature requests in the repository.' % [name, link],
 
   statPanel(
     title,
