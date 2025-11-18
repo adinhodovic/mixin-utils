@@ -147,7 +147,7 @@ local textPanelOptions = text.panelOptions;
     pcLegend.withValues(values) +
     pcStandardOptions.withOverrides(overrides),
 
-  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false, decimals=null)::
+  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false, decimals=null, min=null, max=null)::
     timeSeries.new(title) +
     (
       if description != null then
@@ -210,6 +210,16 @@ local textPanelOptions = text.panelOptions;
         tsCustom.withFillOpacity(100) +
         tsCustom.stacking.withMode(stack) +
         tsCustom.withLineWidth(1)
+      else {}
+    ) +
+    (
+      if min != null then
+        tsCustom.withAxisSoftMin(min)
+      else {}
+    ) +
+    (
+      if max != null then
+        tsCustom.withAxisSoftMax(max)
       else {}
     ),
 
