@@ -200,7 +200,7 @@ local textPanelOptions = text.panelOptions;
     (
       if std.length(calcs) > 0 then
         tsLegend.withSortBy(
-          std.asciiUpper(std.substr(calcs, 0, 1)) + std.substr(calcs, 1, std.length(calcs) - 1)
+          std.asciiUpper(std.substr(calcs[0], 0, 1)) + std.substr(calcs[0], 1, std.length(calcs[0]) - 1)
         )
       else {}
     ) +
