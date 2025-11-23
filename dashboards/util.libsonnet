@@ -197,7 +197,11 @@ local textPanelOptions = text.panelOptions;
     tsLegend.withDisplayMode('table') +
     tsLegend.withPlacement('right') +
     tsLegend.withCalcs(calcs) +
-    tsLegend.withSortBy('Mean') +
+    (
+      if std.length(calcs) > 0 then
+        tsLegend.withSortBy(calcs[0])
+      else {}
+    ) +
     tsLegend.withSortDesc(true) +
     tsCustom.withFillOpacity(10) +
     (
