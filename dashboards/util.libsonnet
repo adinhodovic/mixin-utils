@@ -86,7 +86,7 @@ local textPanelOptions = text.panelOptions;
         stPanelOptions.withDescription(description)
       else {}
     ) +
-    stQueryOptions.withTargets([
+    stQueryOptions.withTargets(
       if std.isArray(query) then
         [
           prometheus.new(
@@ -102,7 +102,7 @@ local textPanelOptions = text.panelOptions;
           query,
         ) +
         prometheus.withInstant(instant),
-    ]) +
+    ) +
     variable.query.withDatasource('prometheus', '$datasource') +
     stOptions.withGraphMode(graphMode) +
     stOptions.withShowPercentChange(showPercentChange) +
