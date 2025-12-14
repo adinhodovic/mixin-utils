@@ -93,6 +93,7 @@ local textPanelOptions = text.panelOptions;
             '$datasource',
             q.expr,
           ) +
+          prometheus.withLegendFormat(q.legend) +
           prometheus.withInstant(std.get(q, 'instant', default=instant))
           for q in query
         ] else
