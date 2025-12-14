@@ -78,7 +78,8 @@ local textPanelOptions = text.panelOptions;
       stStandardOptions.threshold.step.withValue(0) +
       stStandardOptions.threshold.step.withColor('green'),
     ],
-    mappings=[]
+    mappings=[],
+    overrides=[],
   )::
     stat.new(title) +
     (
@@ -116,7 +117,8 @@ local textPanelOptions = text.panelOptions;
     stStandardOptions.thresholds.withSteps(steps) +
     stStandardOptions.withMappings(
       mappings
-    ),
+    ) +
+    stStandardOptions.withOverrides(overrides),
 
 
   pieChartPanel(title, unit, query, legend='', description='', labels=['percent'], values=['percent'], overrides=[])::
