@@ -161,7 +161,7 @@ local textPanelOptions = text.panelOptions;
     pcLegend.withValues(values) +
     pcStandardOptions.withOverrides(overrides),
 
-  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, fillOpacity=10, overrides=null, exemplar=false, decimals=null, min=null, max=null)::
+  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, fillOpacity=10, overrides=[], exemplar=false, decimals=null, min=null, max=null)::
     timeSeries.new(title) +
     (
       if description != null then
