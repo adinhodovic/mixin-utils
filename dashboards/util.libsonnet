@@ -11,6 +11,7 @@ local timeSeries = g.panel.timeSeries;
 local table = g.panel.table;
 local pieChart = g.panel.pieChart;
 local heatmap = g.panel.heatmap;
+local gauge = g.panel.gauge;
 local text = g.panel.text;
 
 // Stat
@@ -44,6 +45,11 @@ local tbQueryOptions = table.queryOptions;
 local hmOptions = heatmap.options;
 local hmPanelOptions = heatmap.panelOptions;
 local hmQueryOptions = heatmap.queryOptions;
+
+// gauge
+local gaStandardOptions = gauge.standardOptions;
+local gaPanelOptions = gauge.panelOptions;
+local gaQueryOptions = gauge.queryOptions;
 
 // Textpanel
 local textOptions = text.options;
@@ -81,12 +87,20 @@ local textPanelOptions = text.panelOptions;
       else {}
     ) +
     stQueryOptions.withTargets([
-      prometheus.new('${datasource}', query) +
-      (
-        if instant then
-          prometheus.withInstant(instant)
-        else {}
-      ),
+      if std.isArray(query) then
+        [
+          prometheus.new(
+            '$datasource',
+            q.expr,
+          ) +
+          prometheus.withInstant(std.get(q, 'instant', default=instant))
+          for q in query
+        ] else
+        prometheus.new(
+          '$datasource',
+          query,
+        ) +
+        prometheus.withInstant(instant),
     ]) +
     variable.query.withDatasource('prometheus', '$datasource') +
     stOptions.withGraphMode(graphMode) +
@@ -147,7 +161,7 @@ local textPanelOptions = text.panelOptions;
     pcLegend.withValues(values) +
     pcStandardOptions.withOverrides(overrides),
 
-  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, exemplar=false, decimals=null, min=null, max=null)::
+  timeSeriesPanel(title, unit, query, legend='', calcs=['mean', 'max'], stack=null, description=null, fillOpacity=10, overrides=null, exemplar=false, decimals=null, min=null, max=null)::
     timeSeries.new(title) +
     (
       if description != null then
@@ -186,6 +200,7 @@ local textPanelOptions = text.panelOptions;
         prometheus.withExemplar(exemplar)
     ) +
     tsStandardOptions.withUnit(unit) +
+    tsStandardOptions.withOverrides(overrides) +
     tsOptions.tooltip.withMode('multi') +
     tsOptions.tooltip.withSort('desc') +
     (
@@ -205,7 +220,7 @@ local textPanelOptions = text.panelOptions;
       else {}
     ) +
     tsLegend.withSortDesc(true) +
-    tsCustom.withFillOpacity(10) +
+    tsCustom.withFillOpacity(fillOpacity) +
     (
       if stack == 'normal' then
         tsCustom.withAxisSoftMin(0) +
@@ -295,6 +310,33 @@ local textPanelOptions = text.panelOptions;
     ) +
     hmOptions.withCalculate(true) +
     hmOptions.yAxis.withUnit(unit),
+
+  gaugePanel(title, unit, query, description=null, min=0, max=100, steps=[])::
+    gauge.new(title) +
+    (
+      if description != null then
+        gaPanelOptions.withDescription(description)
+      else {}
+    ) +
+    variable.query.withDatasource('prometheus', '$datasource') +
+    gaQueryOptions.withTargets(
+      if std.isArray(query) then
+        [
+          prometheus.new(
+            '$datasource',
+            q.expr,
+          )
+          for q in query
+        ] else
+        prometheus.new(
+          '$datasource',
+          query,
+        )
+    ) +
+    gaStandardOptions.withUnit(unit) +
+    gaStandardOptions.withMin(min) +
+    gaStandardOptions.withMax(max) +
+    gaStandardOptions.thresholds.withSteps(steps),
 
   textPanel(title, content, description=null, mode='markdown')::
     text.new(title) +
