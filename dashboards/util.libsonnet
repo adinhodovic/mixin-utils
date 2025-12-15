@@ -247,7 +247,7 @@ local textPanelOptions = text.panelOptions;
       else {}
     ),
 
-  tablePanel(title, unit, query, description=null, sortBy=null, transformations=[], overrides=[], steps=[])::
+  tablePanel(title, unit, query, description=null, sortBy=null, transformations=[], overrides=[], steps=[], links=[])::
     table.new(title) +
     (
       if description != null then
@@ -284,6 +284,7 @@ local textPanelOptions = text.panelOptions;
     ) +
     tbQueryOptions.withTransformations(transformations) +
     tbStandardOptions.withOverrides(overrides) +
+    tbStandardOptions.withLinks(links) +
     tbStandardOptions.thresholds.withSteps(steps),
 
   heatmapPanel(title, unit, query, description=null)::
