@@ -265,7 +265,12 @@ local textPanelOptions = text.panelOptions;
             q.expr,
           ) +
           prometheus.withFormat('table') +
-          prometheus.withInstant(true)
+          prometheus.withInstant(true) +
+          (
+            if std.get(q, 'refId', null) != null then
+              prometheus.withRefId(q.refId)
+            else {}
+          )
           for q in query
         ] else
         prometheus.new(
