@@ -5,6 +5,7 @@ local annotation = g.dashboard.annotation;
 
 local variable = dashboard.variable;
 local prometheus = g.query.prometheus;
+local loki = g.query.loki;
 
 local stat = g.panel.stat;
 local timeSeries = g.panel.timeSeries;
@@ -13,6 +14,8 @@ local pieChart = g.panel.pieChart;
 local heatmap = g.panel.heatmap;
 local gauge = g.panel.gauge;
 local text = g.panel.text;
+local logs = g.panel.logs;
+local stateTimeline = g.panel.stateTimeline;
 
 // Stat
 local stOptions = stat.options;
@@ -54,6 +57,16 @@ local gaQueryOptions = gauge.queryOptions;
 // Textpanel
 local textOptions = text.options;
 local textPanelOptions = text.panelOptions;
+
+// Logs panel
+local lgOptions = logs.options;
+local lgQueryOptions = logs.queryOptions;
+local lgPanelOptions = logs.panelOptions;
+
+// State Timeline panel
+local slStandardOptions = stateTimeline.standardOptions;
+local slQueryOptions = stateTimeline.queryOptions;
+local slPanelOptions = stateTimeline.panelOptions;
 
 {
   // Bypasses grafana.com/dashboards validator
@@ -356,6 +369,81 @@ local textPanelOptions = text.panelOptions;
     ) +
     textOptions.withMode(mode) +
     textOptions.withContent(content),
+
+  // Loki Logs Panel
+  logsPanel(title, query, description=null, maxLines=100, showTime=true, wrapLogMessage=true, enableLogDetails=true)::
+    logs.new(title) +
+    (
+      if description != null then
+        lgPanelOptions.withDescription(description)
+      else {}
+    ) +
+    variable.query.withDatasource('loki', '$datasource') +
+    lgQueryOptions.withTargets(
+      if std.isArray(query) then
+        [
+          loki.new(
+            '$datasource',
+            q.expr,
+          ) +
+          loki.withMaxLines(std.get(q, 'maxLines', default=maxLines))
+          for q in query
+        ] else
+        loki.new(
+          '$datasource',
+          query,
+        ) +
+        loki.withMaxLines(maxLines)
+    ) +
+    lgOptions.withShowTime(showTime) +
+    lgOptions.withWrapLogMessage(wrapLogMessage) +
+    lgOptions.withEnableLogDetails(enableLogDetails),
+
+  // Loki State Timeline Panel
+  // insertNulls: Controls gap display - value in milliseconds or boolean
+  //   - number (e.g., 300000 = 5 min): Insert null after this gap duration
+  //   - true: Use automatic threshold
+  //   - false/null: Connect all points regardless of gaps
+  stateTimelinePanel(title, query, description=null, maxLines=50, transformations=[], mappings=[], overrides=[], insertNulls=300000)::
+    stateTimeline.new(title) +
+    (
+      if description != null then
+        slPanelOptions.withDescription(description)
+      else {}
+    ) +
+    variable.query.withDatasource('loki', '$datasource') +
+    slQueryOptions.withTargets(
+      if std.isArray(query) then
+        [
+          loki.new(
+            '$datasource',
+            q.expr,
+          ) +
+          loki.withMaxLines(std.get(q, 'maxLines', default=maxLines))
+          for q in query
+        ] else
+        loki.new(
+          '$datasource',
+          query,
+        ) +
+        loki.withMaxLines(maxLines)
+    ) +
+    slQueryOptions.withTransformations(transformations) +
+    slStandardOptions.withMappings(mappings) +
+    slStandardOptions.withOverrides(overrides) +
+    (
+      if insertNulls != null then
+        {
+          fieldConfig+: {
+            defaults+: {
+              custom+: {
+                insertNulls: insertNulls,
+              },
+            },
+          },
+        }
+      else {}
+    ),
 
   annotations(config, filters)::
     local customAnnotation =
