@@ -12,30 +12,10 @@ mixin-utils is a Jsonnet library that provides reusable helper functions for cre
 
 ### Using jsonnet-bundler
 
-Add mixin-utils to your `jsonnetfile.json`:
-
-```json
-{
-  "version": 1,
-  "dependencies": [
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/adinhodovic/mixin-utils.git",
-          "subdir": ""
-        }
-      },
-      "version": "main",
-      "name": "mm-utils"
-    }
-  ]
-}
-```
-
-Then install with:
+Install mixin-utils with:
 
 ```bash
-jb install
+jb install github.com/adinhodovic/mixin-utils@main
 ```
 
 ## Usage
