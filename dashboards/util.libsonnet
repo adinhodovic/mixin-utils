@@ -371,7 +371,7 @@ local slPanelOptions = stateTimeline.panelOptions;
     textOptions.withContent(content),
 
   // Loki Logs Panel
-  logsPanel(title, query, description=null, maxLines=100, showTime=true, wrapLogMessage=true, enableLogDetails=true)::
+  logsPanel(title, query, description=null, maxLines=100, showTime=true, wrapLogMessage=true, enableLogDetails=true, detailsMode='sidebar', fontSize='default', showControls=true)::
     logs.new(title) +
     (
       if description != null then
@@ -397,7 +397,14 @@ local slPanelOptions = stateTimeline.panelOptions;
     ) +
     lgOptions.withShowTime(showTime) +
     lgOptions.withWrapLogMessage(wrapLogMessage) +
-    lgOptions.withEnableLogDetails(enableLogDetails),
+    lgOptions.withEnableLogDetails(enableLogDetails) + {
+      // These are not yet available in grafonnet, so we add them via custom options.
+      options+: {
+        detailsMode: detailsMode,
+        fontSize: fontSize,
+        showControls: showControls,
+      },
+    },
 
   // Loki State Timeline Panel
   // insertNulls: Controls gap display - value in milliseconds or boolean
