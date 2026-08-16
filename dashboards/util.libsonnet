@@ -488,12 +488,12 @@ local slPanelOptions = stateTimeline.panelOptions;
       annotation.withEnable(true) +
       annotation.withHide(false) +
       annotation.datasource.withUid(config.annotation.datasource) +
-      annotation.target.withType(config.annotation.type) +
+      annotation.withType(config.annotation.type) +
       (
         if config.annotation.type == 'tags' then
-          annotation.target.withMatchAny(true) +
+          annotation.withTargetMixin({ matchAny: true }) +
           if std.length(config.annotation.tags) > 0 then
-            annotation.target.withTags(config.annotation.tags)
+            annotation.withTargetMixin({ tags: config.annotation.tags })
           else {}
         else {}
       );
