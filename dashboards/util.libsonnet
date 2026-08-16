@@ -77,6 +77,35 @@ local slPanelOptions = stateTimeline.panelOptions;
 
   dashboardDescriptionLink(name, link): 'The dashboards were generated using [%s](%s). Open issues and create feature requests in the repository.' % [name, link],
 
+  colorOverrides: {
+    pieChartByName(name, color)::
+      pcStandardOptions.override.byName.new(name) +
+      pcStandardOptions.override.byName.withPropertiesFromOptions(
+        pcStandardOptions.color.withMode('fixed') +
+        pcStandardOptions.color.withFixedColor(color)
+      ),
+
+    pieChartByNames(colors):: [
+      $.colorOverrides.pieChartByName(name, colors[name])
+      for name in std.objectFields(colors)
+    ],
+
+    timeSeriesByRegexp(regexp, color)::
+      tsStandardOptions.override.byRegexp.new(regexp) +
+      tsStandardOptions.override.byRegexp.withPropertiesFromOptions(
+        tsStandardOptions.color.withMode('fixed') +
+        tsStandardOptions.color.withFixedColor(color)
+      ),
+
+    timeSeriesBySuffix(suffix, color)::
+      self.timeSeriesByRegexp('.*%s$' % suffix, color),
+
+    timeSeriesBySuffixes(colors, prefix=''):: [
+      $.colorOverrides.timeSeriesBySuffix('%s%s' % [prefix, name], colors[name])
+      for name in std.objectFields(colors)
+    ],
+  },
+
   statPanel(
     title,
     unit,

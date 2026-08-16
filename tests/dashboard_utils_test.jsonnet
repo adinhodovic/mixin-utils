@@ -193,6 +193,31 @@ local tests = {
             std.length(links) > 0,
     expected: true,
   },
+
+  testPieChartColorOverride: {
+    local override = dashUtils.colorOverrides.pieChartByName('Healthy', 'green'),
+    result: override.matcher.id == 'byName' &&
+            override.matcher.options == 'Healthy' &&
+            override.properties[0].id == 'color' &&
+            override.properties[0].value.fixedColor == 'green',
+    expected: true,
+  },
+
+  testTimeSeriesColorOverride: {
+    local override = dashUtils.colorOverrides.timeSeriesBySuffix(' - Healthy', 'green'),
+    result: override.matcher.id == 'byRegexp' &&
+            override.matcher.options == '.* - Healthy$' &&
+            override.properties[0].id == 'color' &&
+            override.properties[0].value.fixedColor == 'green',
+    expected: true,
+  },
+
+  testColorOverrideMap: {
+    local overrides = dashUtils.colorOverrides.timeSeriesBySuffixes({ Healthy: 'green', Degraded: 'red' }, prefix=' - '),
+    result: std.length(overrides) == 2 &&
+            std.set(['.* - Degraded$', '.* - Healthy$']) == std.set([override.matcher.options for override in overrides]),
+    expected: true,
+  },
 };
 
 // Run tests and verify all pass
